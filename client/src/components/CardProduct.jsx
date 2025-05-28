@@ -6,40 +6,17 @@ import calculateDiscount from '../utils/CalculateDiscount'
 import toast from 'react-hot-toast'
 import Axios from '../utils/Axios'
 import SummaryApi from '../common/SummaryApi'
+import { useGlobalContext } from '../provider/GlobalProvider'
+import AddToCartButton from './AddToCartButton'
 
 const CardProduct = ({data}) => {
     // const url= `/product/${convertToUrl(data.name)}-${convertToUrl(data._id)}`
     const url= `/product/${convertToUrl(data?.name)}-${convertToUrl(data?._id)}`
     const [loading, setLoading]= useState(false)
 
-    const handleAddToCart= async (e)=>{
-        try {
-            e.preventDefault()
-            e.stopPropagation()
-            setLoading(true)
+    
 
-            const response= await Axios({
-                ...SummaryApi.addToCart,
-                data: {
-                    productId: data?._id
-                }
-            })
-
-            const {data: responseData} = response
-
-            if(responseData.success){
-                toast.success(responseData.message)
-            }
-
-        } catch (error) {
-            // console.log(error?.response?.data?.message)
-            toast.error(error?.response?.data?.message)
-        }
-        finally{
-            setLoading(false)
-        }
-    }
-
+    
   return (
     <Link to={url} className='border border-gray-200 p-4 grid gap-3 max-w-52 lg:min-w-42 rounded' >
         <div className='max-h-32 rounded'>
@@ -68,7 +45,7 @@ const CardProduct = ({data}) => {
             <div className=''>
                 {
                     data.stock < 1 ? (<p className='text-sm my-2 text-red-500'>Out Of Stock</p>) : (
-                        <button onClick={handleAddToCart} className='bg-green-600 text-white px-4 py-1 rounded cursor-pointer hover:bg-green-700'>Add</button>
+                        <AddToCartButton  data={data} />
                     )
                 }
             </div>

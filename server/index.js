@@ -11,6 +11,8 @@ import uploadRouter from './routes/upload.route.js';
 import subCategoryRouter from './routes/subCategory.route.js';
 import productRouter from './routes/product.route.js';
 import cartRouter from './routes/cart.route.js';
+import addressRouter from './routes/address.route.js';
+import orderRouter from './routes/order.route.js';
 
 dotenv.config();
 
@@ -20,7 +22,16 @@ app.use(cors({
     origin: process.env.FRONTEND_URL
 }));
 
-app.use(express.json());
+// app.use(express.json());
+
+// As our webhook needs raw data so we are filtering if webhook then it will not be parsed to json
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/order/webhook') {
+    next(); // skip express.json() for webhook
+  } else {
+    express.json()(req, res, next);
+  }
+});
 app.use(cookieParser());
 app.use(morgan());
 app.use(helmet({
@@ -42,6 +53,8 @@ app.use("/api/file", uploadRouter)
 app.use("/api/subcategory", subCategoryRouter)
 app.use("/api/product", productRouter)
 app.use("/api/cart", cartRouter)
+app.use("/api/address", addressRouter)
+app.use("/api/order", orderRouter)
 
 connectDB().then(()=>{
     app.listen(PORT, ()=>{

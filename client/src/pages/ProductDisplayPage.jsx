@@ -11,6 +11,7 @@ import image1 from '../assets/minute_delivery.png'
 import image2 from "../assets/Best_Prices_Offers.png"
 import image3 from "../assets/Wide_Assortment.png"
 import calculateDiscount from '../utils/CalculateDiscount'
+import AddToCartButton from '../components/AddToCartButton'
 
 const ProductDisplayPage = () => {
   const params= useParams()
@@ -59,14 +60,14 @@ const ProductDisplayPage = () => {
   useEffect(()=>{
     fetchProductDetails()
   }, [productId])
-  console.log("data is", data)
+  // console.log("data is", data)
 
   
 
   return (
     <section className='container mx-auto p-4 grid lg:grid-cols-2  '>
       <div className='h-full'>
-        <div className='bg-white lg:min-h-[70vh] min-h-56 lg:h-[100vh] rounded h-full w-full'>
+        <div className='bg-white min-h-[300px] lg:min-h-[70vh] rounded w-full'>
           <img className='w-full h-full object-scale-down' src={data.image[imageIndex]} alt="Image" />
           
         </div>
@@ -126,7 +127,7 @@ const ProductDisplayPage = () => {
       </div>
 
       {/* right part  */}
-      <div className='p-4 lg:pl-7 text-base my-35 lg:my-1 lg:text-lg'>
+      <div className='p-4 lg:pl-7 text-base  lg:my-1 lg:text-lg'>
         <p className='bg-green-300 w-fit px-2 rounded-full' >10 Minutes</p>
         <h2 className='text-lg font-semibold lg:text-3xl'>{data?.name}</h2>
         <p>{data.unit}</p>
@@ -146,7 +147,10 @@ const ProductDisplayPage = () => {
             <p className='text-sm my-2 text-red-500'>Out Of Stock</p>
           ) : (
 
-            <button className='my-1 mb-2 px-4 py-1 bg-green-600 hover:bg-green-700 rounded font-semibold text-white cursor-pointer'>Add</button>
+            // <button className='my-1 mb-2 px-4 py-1 bg-green-600 hover:bg-green-700 rounded font-semibold text-white cursor-pointer'>Add</button>
+            <div className='my-4'>
+              <AddToCartButton data={data}/>
+            </div>
           )
         }
 

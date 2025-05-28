@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Search from './Search'
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -10,6 +10,10 @@ import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import UserMenu from './UserMenu';
 import logo from '../assets/logo.png'
+import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees';
+import { useGlobalContext } from '../provider/GlobalProvider';
+import DisplayCartItem from './DisplayCartItem';
+
 
 
 const Header = () => {
@@ -23,13 +27,22 @@ const Header = () => {
     const isSearchPage = location.pathname === "/search"
     // console.log(isSearchPage)
     const [openUserMenu, setOpenUserMenu] = useState(false)
+    const cartItem= useSelector(state=>state.cartItem.cart)
+
+    // console.log(cartItem)
 
     const navigate = useNavigate()
 
     // Getting user details from redux store
     const user = useSelector((state) => state?.user)
     // console.log("The user details are ", user)
+
+    // const [totalPrice, setTotalPrice]= useState(0)
+    // const [totalQty, setTotalQty]= useState(0)
     
+
+    const {totalPrice, totalQty}= useGlobalContext()
+    const [openCartSection, setOpenCartSection]= useState(false)
 
     const redirectHome = (e) => {
         // e.stopPropagation()
@@ -49,6 +62,21 @@ const Header = () => {
 
         navigate("/user")
     }
+
+    // useEffect(()=>{
+    //     const qty= cartItem.reduce((prev, curr)=>{
+    //         return prev+curr.quantity
+    //     }, 0)
+    //     setTotalQty(qty)
+    //     // console.log(qty)
+        
+
+    //     const tPrice= cartItem.reduce((prev, curr)=>{
+    //         return prev+ (curr.productId.price * curr.quantity)
+    //     }, 0)
+    //     setTotalPrice(tPrice)
+    //     // console.log(tPrice)
+    // }, [cartItem])
     return (
         <header className='h-27 lg:h-20 shadow-md sticky top-0 z-40 pt-2 flex flex-col justify-center bg-white'>
             {/* Basically the Binkeyit and user logo will not be showed  */}
@@ -106,13 +134,23 @@ const Header = () => {
                                         <button onClick={redirectToLoginPage} className='hover:cursor-pointer text-lg px-2' >Login</button>
                                     )
                                 }
-                                <button className='flex cursor-pointer items-center gap-2 bg-green-700 px-2 py-2 rounded text-white hover:bg-green-800'>
+                                <button onClick={()=>setOpenCartSection(true)} className='flex cursor-pointer items-center gap-2 bg-green-700 px-2 py-2 rounded text-white hover:bg-green-800 text-sm'>
                                     {/* Add to cart icon  */}
                                     <div className='animate-bounce'>
                                         <FaShoppingCart size={21} />
                                     </div>
                                     <div className='font-semibold'>
-                                        <p>My Cart</p>
+                                        {
+                                            cartItem[0] ? (
+                                                <div>
+                                                    <p>{totalQty} items</p>
+                                                    <p>{DisplayPriceInRupees(totalPrice)}</p>
+                                                </div>
+                                            ) : (
+                                                <p>My Cart</p>
+                                            )
+                                        }
+                                        
                                     </div>
                                 </button>
                             </div>
@@ -125,6 +163,12 @@ const Header = () => {
             <div className='container mx-auto px-2 my-2 lg:hidden'>
                 <Search />
             </div>
+
+            {
+                openCartSection && (
+                    <DisplayCartItem close={()=>setOpenCartSection(false)} />
+                )
+            }
         </header>
     )
 }

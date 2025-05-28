@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import toast, { Toaster } from 'react-hot-toast';
@@ -12,19 +12,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllCategory, setSubCategory, setLoadingCategory } from './store/productSlice'
 import Axios from './utils/Axios'
 import SummaryApi from './common/SummaryApi'
+import {handleAddItemCart} from './store/cartProduct'
+import GlobalProvider from './provider/GlobalProvider'
+import { FaCartPlus } from "react-icons/fa";
+import CartMobileLink from './components/CartMobileLink'
+
 
 
 function App() {
   const dispatch= useDispatch()
+  const location= useLocation()
+
+
 
   const fetchData= async ()=>{
     const userData= await fetchUserDetails()
     // console.log(userData.data)
     dispatch(setUserDetails(userData.data))
+    
   }
-
-
-
 
   const fetchCategory= async ()=>{
       try {
@@ -61,7 +67,7 @@ function App() {
     dispatch(setSubCategory(response.data.data))
     // console.log(response.data.data)
   }
-  
+
     useEffect(()=>{
       fetchCategory()
       fetchData()
@@ -69,7 +75,7 @@ function App() {
     }, [])
 
   return (
-    <>
+    <GlobalProvider>
     <Header/>
       <main className='min-h-[78vh]'>
         
@@ -78,7 +84,13 @@ function App() {
       </main>
       <Footer/>
       <Toaster/>
-    </>
+      {
+        location.pathname!=="/checkout" && (
+
+          <CartMobileLink/>
+        )
+      }
+    </GlobalProvider>
   )
 }
 

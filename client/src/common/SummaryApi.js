@@ -1,5 +1,5 @@
 // we create this for large applicaation so that code becomes readable. 
-export const baseURL= "http://localhost:8080"
+export const baseURL= import.meta.env.VITE_API_URL
 
 const SummaryApi={
     register: {
@@ -113,6 +113,46 @@ const SummaryApi={
     addToCart: {
         url: "api/cart/create",
         method:"post"
+    },
+    getCartItem: {
+        url: "/api/cart/get",
+        method: 'get'
+    },
+    updateCartItemQty:{
+        url: "/api/cart/update-qty",
+        method: "put"
+    },
+    deleteCartItem:{
+        url: "/api/cart/delete-cart-item",
+        method: "delete"
+    },
+    createAddress:{
+        url: "/api/address/create",
+        method: "post"
+    },
+    getAddress: {
+        url: "/api/address/get",
+        method: "get"
+    },
+    updateAddress: {
+        url: "/api/address/update",
+        method: "put"
+    },
+    disableAddress: {
+        url: "/api/address/disable",
+        method: "delete"
+    },
+    CashOnDelivery: {
+        url: "/api/order/cash-on-delivery",
+        method: "post"
+    },
+    payment_url: {
+        url: "/api/order/checkout",
+        method: "post"
+    },
+    getOrderItems: {
+        url: "/api/order/order-list",
+        method: "get"
     }
 }
 
